@@ -1,19 +1,17 @@
 package com.feb17.pagePulse;
 
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-
 public class App {
 
 
     public static void main (String[] args){
         // 1. website besuchen ohne User Agent oder sonstige Methoden die Bot detection zu umgehen
         // TODO die url soll über api request oder Kommandozentrale kommen
-        String url = "https://amazon.com";
+        String url = "https://zalando.com";
 
         // 1.2 website prüfen
         WebsiteChecker checker = new WebsiteChecker();
+        //TODO sagt derzeit nur aus, dass es kein Error gibt sollte besser überprüft werden
         boolean reachable = checker.isWebsiteReachable(url);
 
         // 2. screenshot aufnehmen und abspeichern
