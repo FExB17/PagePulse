@@ -1,5 +1,11 @@
 package com.feb17.pagePulse;
 
-public class WebsiteChecker {
+import com.feb17.pagePulse.utils.Driver;
 
+public class WebsiteChecker {
+    public boolean isWebsiteReachable(String url) {
+        Driver.getDriver().get(url);
+        return true;
+    }
 }
+
