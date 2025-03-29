@@ -12,12 +12,14 @@ public class WebsiteChecker {
         try {
             URL checkURL = new URL(url);
             // damit ich zugang zu den status codes habe
+            // überprüft nicht mit selenium, sondern sendet nur eine anfrage die natürlich als bot erkannt wird
             HttpURLConnection connection = (HttpURLConnection) checkURL.openConnection();
-            connection.setRequestMethod("HEAD");
+            connection.setRequestMethod("GET");
             connection.setConnectTimeout(3000);
             connection.setReadTimeout(3000);
 
             int statusCode = connection.getResponseCode();
+            System.out.println("Statuscode: " + statusCode);
 
             return statusCode >= 200 && statusCode < 400;
         } catch (IOException e) {
