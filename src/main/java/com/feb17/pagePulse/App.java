@@ -2,28 +2,74 @@ package com.feb17.pagePulse;
 
 
 import com.feb17.pagePulse.utils.ConfigReader;
+import io.javalin.Javalin;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Scanner;
 
 public class App {
+    //TODO muss noch korrigiert werden
+    static String url = "";
+
+    // nimmt die url von der Kommandozeile im Befehl oder von der Eingabe
+    public static void runCliMode(String[] args){
+        String url = "";
+        if (args.length > 0) {
+            url = args[0];
+        } else {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter the URL of the website you want to check: ");
+            url = scanner.nextLine();
+        }
+
+        WebsiteChecker checker = new WebsiteChecker();
+        boolean reachable = checker.isWebsiteReachable(url);
+
+        ScreenshotService ss = new ScreenshotService();
+        String path = ConfigReader.getProperty("screenshotPath")+LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss"))+".png";
+        boolean success = ss.captureScreenshot(url, path);
+
+        System.out.println("Screenshot saved: " + success);
+    }
+
+    public static void startApiServer(){
+        Javalin app = Javalin.create().start(8080);
+        app.get("/check", ctx ->{
+            String url = ctx.queryParam("url");
+            if(url == null || url.isBlank()){
+                ctx.status(400).result("Missing URL parameter.");
+                return;
+            }
+            WebsiteChecker checker = new WebsiteChecker();
+            boolean reachable = checker.isWebsiteReachable(url);
+
+            ScreenshotService ss = new ScreenshotService();
+            String path = ConfigReader.getProperty("screenshotPath")+LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss"))+".png";
+            ScreenshotResult result = ss.captureScreenshotBase64(url,path);
+
+
+            ctx.json(Map.of(
+                    "url", url,
+                    "reachable", reachable,
+                    "screenshot_saved", result.success,
+                    "screenshot_path", result.path,
+                    "screenshot_base64", result.base64
+            ));
+        });
+    }
 
 
     public static void main (String[] args){
         // 1. website besuchen ohne User Agent oder sonstige Methoden die Bot detection zu umgehen
         // TODO die url soll über api request oder Kommandozentrale kommen
-        String url;
-        if (args.length > 0) {
-            url = args[0];
+        // wird entschieden ob die url per cli oder api übergeben wird
+        if (args.length > 0 && args[0].equalsIgnoreCase("server")) {
+            startApiServer();
         } else {
-            Scanner scan = new Scanner(System.in);
-            System.out.println("Enter a full Webpage including protocol");
-            url = scan.nextLine();
+            runCliMode(args);
         }
-
-
-
 
         // 1.2 website prüfen
         WebsiteChecker checker = new WebsiteChecker();
