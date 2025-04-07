@@ -19,8 +19,10 @@ public class Driver {
     public static WebDriver getDriver(){
         if (driver == null) {
             ChromeOptions options = new ChromeOptions();
-            options.addArguments(ConfigReader.getProperty("driverMode"));
-            options.addArguments("--start-maximized");
+            options.addArguments("--headless");
+            options.addArguments("----window-size=1920,1080");
+            options.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36");
             driver = new ChromeDriver(options);
             driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         }
