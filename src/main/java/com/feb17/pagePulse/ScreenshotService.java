@@ -5,6 +5,9 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -56,6 +59,20 @@ public class ScreenshotService {
             return new ScreenshotResult(false, path, null);
         } finally {
             Driver.quit();
+        }
+    }
+
+    public BufferedImage captureScreenshotBuffered (String url){
+        WebDriver driver = Driver.getDriver();
+        driver.get(url);
+        byte[] screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
+        try {
+            return ImageIO.read(new ByteArrayInputStream(screenshot));
+        } catch (IOException e) {
+            System.out.println("Error while buffering image" +e);
+            return null;
+        }finally{
+            driver.quit();
         }
     }
 }
