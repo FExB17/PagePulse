@@ -43,9 +43,6 @@ public class guiApp {
         Runnable triggerScreenshot = () -> handleScreenshot(searchField, imageLabel, panel);
         searchButton.addActionListener(e -> triggerScreenshot.run());
         searchField.addActionListener(e -> triggerScreenshot.run());
-
-
-
     }
 
     private static void handleScreenshot(JTextField searchField, JLabel label, JPanel panel){

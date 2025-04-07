@@ -1,92 +1,113 @@
-# 📸 PagePulse – Website Screenshot Tool mit Bot Detection
 
-PagePulse ist ein kleines Java-Tool, das eine Webseite automatisiert besucht, einen Screenshot erstellt und prüft, ob der Zugriff blockiert wird (z. B. durch Bot-Detection wie HTTP 403).
+# 📸 PagePulse – Website Screenshot Tool
 
----
-
-## 🚀 Funktionen
-
-- Webseite mit Selenium besuchen (Headless Chrome)
-- Screenshot aufnehmen (lokale Datei & Base64)
-- Bot-Erkennung (HTTP-Status-Auswertung)
-- Zwei Modi: **Kommandozeile (CLI)** oder **lokale API**
+**PagePulse** ist ein flexibles Tool zur automatischen Überprüfung von Websites und Erstellung von Screenshots – entweder über die Kommandozeile, per Web-API oder mit einer einfachen Benutzeroberfläche (GUI).  
+Es kann als `.exe` verwendet werden und benötigt **keine Java-Installation**, wenn die JRE mitgeliefert wird.
 
 ---
 
-## 🖥️ Nutzung
+## 🔧 Funktionen
 
-### 🔹 Modus 1: Kommandozeile (CLI)
+- 🌐 Prüft, ob eine Website erreichbar ist (`GET`-Request)
+- 📷 Erstellt automatisch einen Screenshot mit **Selenium**
+- 💾 Speichert das Bild lokal & gibt es als **Base64** zurück (API)
+- 🖥️ Startbar über:
+  - **GUI mit Suchfeld**
+  - **Kommandozeile (CLI)**
+  - **Webserver (API via `/check?url=...`)**
+
+---
+
+## 🗃️ Projektstruktur
+
+```
+PagePulse/
+├─ PagePulse.exe              → Start der App (GUI oder CLI)
+├─ guiApp.jar / .class        → GUI-Modus (Swing)
+├─ pagepulse-all.jar          → Fat-JAR mit CLI und API
+├─ jre/                       → eingebettete Java-Laufzeitumgebung (JRE 17)
+├─ resources/config.properties → Screenshot-Speicherort
+```
+
+---
+
+## 🚀 Verwendung
+
+### 📌 1. GUI-Modus
+
+Starte `PagePulse.exe`, um eine einfache grafische Oberfläche zu öffnen:  
+🔍 Gib eine URL ein → klicke „Search“ → Screenshot wird angezeigt.
+
+---
+
+### 💻 2. CLI-Modus
 
 ```bash
-java -jar PagePulse.jar https://zalando.com
+PagePulse.exe https://example.com
 ```
 
-→ Fragt ggf. nach einer URL  
-→ Macht Screenshot und zeigt ihn im Standardbrowser (Base64)  
-→ Ausgabe: Status, Screenshot vorhanden, etc.
+- Erstellt einen Screenshot der angegebenen Website.
+- Öffnet diesen im Standard-Browser.
+- Der Pfad des Screenshots wird in der Konsole ausgegeben.
+
+Ohne Argument wirst du nach einer URL gefragt.
 
 ---
 
-### 🔹 Modus 2: Lokaler Server (API)
+### 🌐 3. Webserver-Modus (API)
 
 ```bash
-java -jar PagePulse.jar server
+PagePulse.exe server
 ```
 
-Dann im Browser aufrufen:
+Dann im Browser oder per Tool wie Postman:
 
 ```
-http://localhost:8080/view?url=https://example.com
+GET http://localhost:8080/check?url=https://example.com
 ```
 
-→ Zeigt Screenshot im Browser direkt an  
-→ Alternativ auch als JSON über `/check?url=...`
-
----
-
-## 🧱 Projektstruktur (wichtigste Klassen)
-
-```
-src/main/java/com/feb17/pagePulse/
-├── App.java                // Startpunkt (CLI & API)
-├── ScreenshotService.java  // Screenshot + Base64
-├── WebsiteChecker.java     // Erreichbarkeit prüfen
-├── ScreenshotResult.java   // Datenmodell für Antwort
-└── utils/
-    ├── Driver.java         // Singleton WebDriver
-    └── ConfigReader.java   // Lese config.properties
-```
-
----
-
-## 🔧 Build & Ausführen
-
-Voraussetzungen:
-- Java 17+
-- Maven installiert
-- Chrome + ChromeDriver im PATH
-
-```bash
-mvn clean package
-java -jar target/PagePulse-1.0-SNAPSHOT-shaded.jar
-```
-
----
-
-## 📌 Beispielausgabe (CLI)
-
+Antwort:
 ```json
 {
   "url": "https://example.com",
   "reachable": true,
   "screenshot_saved": true,
-  "screenshot_path": "screenshots/15042025_182544.png",
-  "screenshot_base64": "iVBORw0KGgoAAAANSUhEUgAA..."
+  "screenshot_path": "...",
+  "screenshot_base64": "..."
 }
 ```
 
 ---
 
-## 📝 Lizenz
+## ⚙️ Konfiguration
 
-Open Source – zu Lern- und Demonstrationszwecken.
+**`config.properties`**:
+
+```properties
+screenshotPath=screenshots/
+```
+
+Pfad, unter dem Screenshots gespeichert werden.
+
+---
+
+## 🪛 Technische Anforderungen
+
+- Selenium (headless oder sichtbar)
+- ChromeDriver (muss zur Chrome-Version passen)
+- JDK/JRE 17  
+→ Wird bei der `.exe` bereits mitgeliefert (Ordner `jre/`)
+
+---
+
+## 📦 Distribution als `.exe`
+
+Die Datei `PagePulse.exe` wurde mit **Launch4j** erstellt und verwendet eine **eingebettete JRE**, sodass **keine Java-Installation** erforderlich ist.
+
+---
+
+## ❗ Hinweise
+
+- **ChromeDriver** muss zur installierten Chrome-Version passen.
+- Manche Seiten erkennen automatisierte Zugriffe – dies kann den Screenshot verhindern.
+- Im CLI-Modus wird die Seite im Browser geöffnet (`Desktop.browse()`).

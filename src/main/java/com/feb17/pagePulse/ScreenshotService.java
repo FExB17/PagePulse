@@ -1,9 +1,12 @@
 package com.feb17.pagePulse;
 
 import com.feb17.pagePulse.utils.Driver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -12,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.time.Duration;
 import java.util.Base64;
 
 public class ScreenshotService {
@@ -65,6 +69,10 @@ public class ScreenshotService {
     public BufferedImage captureScreenshotBuffered (String url){
         WebDriver driver = Driver.getDriver();
         driver.get(url);
+
+        // die Bilder waren vorher gezoomt
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+
         byte[] screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
         try {
             return ImageIO.read(new ByteArrayInputStream(screenshot));
