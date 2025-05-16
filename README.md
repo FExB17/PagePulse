@@ -2,14 +2,13 @@
 # 📸 PagePulse – Website Screenshot Tool
 
 **PagePulse** ist ein flexibles Tool zur automatischen Überprüfung von Websites und Erstellung von Screenshots – entweder über die Kommandozeile, per Web-API oder mit einer einfachen Benutzeroberfläche (GUI).  
-Es kann als `.exe` verwendet werden und benötigt **keine Java-Installation**, wenn die JRE mitgeliefert wird.
+Es kann als `.exe` verwendet werden und benötigt im Stammordner eine JRE 
 
 ---
 
 ## 🔧 Funktionen
 
-- 🌐 Prüft, ob eine Website erreichbar ist (`GET`-Request)
-- 📷 Erstellt automatisch einen Screenshot mit **Selenium**
+- 📷 prüft die Reaktion einer Website auf dein Bot und erfasst es als schreenshot
 - 💾 Speichert das Bild lokal & gibt es als **Base64** zurück (API)
 - 🖥️ Startbar über:
   - **GUI mit Suchfeld**
@@ -25,7 +24,6 @@ PagePulse/
 ├─ PagePulse.exe              → Start der App (GUI oder CLI)
 ├─ guiApp.jar / .class        → GUI-Modus (Swing)
 ├─ pagepulse-all.jar          → Fat-JAR mit CLI und API
-├─ jre/                       → eingebettete Java-Laufzeitumgebung (JRE 17)
 ├─ resources/config.properties → Screenshot-Speicherort
 ```
 
@@ -96,13 +94,8 @@ Pfad, unter dem Screenshots gespeichert werden.
 - Selenium (headless oder sichtbar)
 - ChromeDriver (muss zur Chrome-Version passen)
 - JDK/JRE 17  
-→ Wird bei der `.exe` bereits mitgeliefert (Ordner `jre/`)
 
 ---
-
-## 📦 Distribution als `.exe`
-
-Die Datei `PagePulse.exe` wurde mit **Launch4j** erstellt und verwendet eine **eingebettete JRE**, sodass **keine Java-Installation** erforderlich ist.
 
 ---
 
