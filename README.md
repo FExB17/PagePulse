@@ -95,7 +95,6 @@ Pfad, unter dem Screenshots gespeichert werden.
 - ChromeDriver (muss zur Chrome-Version passen)
 - JDK/JRE 17  
 
----
 
 ---
 
